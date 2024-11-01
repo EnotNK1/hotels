@@ -21,7 +21,9 @@ hotels = [
     {"id": 2, "title": "Дубай", "name": "dubai"}
 ]
 
-@app.get("/hotels")
+@app.get("/hotels",
+         summary="Получить список отелей",
+         description="Можно отправить опционально id и/или название отеля для дополнительной фильтрации")
 def get_hotels(
         id: int | None = Query(None, description="Идентификатор"),
         title: str | None = Query(None, description="Название отеля"),
@@ -35,18 +37,22 @@ def get_hotels(
         hotels_.append(hotel)
         return hotels_
 
-@app.post("/hotels")
+@app.post("/hotels",
+          summary="Создать отель")
 def create_hotel(
         title: str = Body(embed=True),
+        name: str = Body(embed=True),
 ):
     global hotels
     hotels.append({
         "id": hotels[-1]["id"] + 1,
-        "title": title
+        "title": title,
+        "name": name
     })
     return {"status": "OK"}
 
-@app.put("/hotels/{hotel_id}")
+@app.put("/hotels/{hotel_id}",
+         summary="Обновить информацию об отеле полностью")
 def put_hotel(
         hotel_id: int,
         title: str = Body(embed=True),
@@ -60,7 +66,8 @@ def put_hotel(
             break
     return {"status": "OK"}
 
-@app.patch("/hotels/{hotel_id}")
+@app.patch("/hotels/{hotel_id}",
+           summary="Обновить информацию об отеле частично")
 def patch_hotel(
         hotel_id: int,
         title: str | None = Body(default=None, embed=True),
@@ -77,7 +84,8 @@ def patch_hotel(
     return {"status": "OK"}
 
 
-@app.delete("/hotels/{hotel_id}")
+@app.delete("/hotels/{hotel_id}",
+            summary="Удалить отель")
 def delete_notel(hotel_id: int):
     global hotels
     hotels = [hotel for hotel in hotels if hotel["id"] != hotel_id]
