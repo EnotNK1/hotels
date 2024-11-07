@@ -13,10 +13,10 @@ hotels = [
          description="Можно отправить опционально id и/или название отеля для дополнительной фильтрации.<p>Tак же есть"
                      " возможность пагинации, ограничения: page > 0, 1 < per_page < 30 </p>")
 def get_hotels(
-        id: int | None = Query(None, description="Идентификатор"),
-        title: str | None = Query(None, description="Название отеля"),
-        page: int | None = Query(None, gt=0, description="Номер страницы"),
-        per_page: int | None = Query(None, gt=1, lt=30, description="Количество отелей на странице"),
+        id: int | None = Query(default=None, description="Идентификатор"),
+        title: str | None = Query(default=None, description="Название отеля"),
+        page: int | None = Query(default=1, gt=0, description="Номер страницы"),
+        per_page: int | None = Query(default=3, gt=1, lt=30, description="Количество отелей на странице"),
 ):
     hotels_ = []
     for hotel in hotels:
