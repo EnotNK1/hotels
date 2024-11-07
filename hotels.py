@@ -1,4 +1,5 @@
-from fastapi import Query, Body, APIRouter
+from fastapi import Query, APIRouter
+from schemas.hotels import Hotel, HotelPATCH
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])
 
@@ -23,49 +24,44 @@ def get_hotels(
         hotels_.append(hotel)
         return hotels_
 
+
 @router.post("",
           summary="Создать отель")
-def create_hotel(
-        title: str = Body(embed=True),
-        name: str = Body(embed=True),
-):
+def create_hotel(hotel_data: Hotel):
     global hotels
     hotels.append({
         "id": hotels[-1]["id"] + 1,
-        "title": title,
-        "name": name
+        "title": hotel_data.title,
+        "name": hotel_data.name
     })
     return {"status": "OK"}
 
+
 @router.put("/{hotel_id}",
          summary="Обновить информацию об отеле полностью")
-def put_hotel(
-        hotel_id: int,
-        title: str = Body(embed=True),
-        name: str = Body(embed=True),
-):
+def put_hotel(hotel_id: int, hotel_data: Hotel):
     global hotels
     for hotel in hotels:
         if hotel["id"] == hotel_id:
-            hotel["title"] = title
-            hotel["name"] = name
+            hotel["title"] = hotel_data.title
+            hotel["name"] = hotel_data.name
             break
     return {"status": "OK"}
+
 
 @router.patch("/{hotel_id}",
            summary="Обновить информацию об отеле частично")
 def patch_hotel(
         hotel_id: int,
-        title: str | None = Body(default=None, embed=True),
-        name: str | None = Body(default=None, embed=True),
+        hotel_data: HotelPATCH
 ):
     global hotels
     for hotel in hotels:
         if hotel["id"] == hotel_id:
-            if title is not None:
-                hotel["title"] = title
-            if name is not None:
-                hotel["name"] = name
+            if hotel_data.title is not None:
+                hotel["title"] = hotel_data.title
+            if hotel_data.name is not None:
+                hotel["name"] = hotel_data.name
             break
     return {"status": "OK"}
 
