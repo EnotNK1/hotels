@@ -1,4 +1,6 @@
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, delete, update
+from pydantic import BaseModel
+from fastapi import HTTPException
 
 class BaseRepository:
     model = None
@@ -18,7 +20,35 @@ class BaseRepository:
 
         return result.scalars().one_or_none()
 
-    async def add(self, data):
+    async def add(self, data: BaseModel):
         data_stmt = insert(self.model).values(**data.model_dump()).returning(self.model)
         result = await self.session.execute(data_stmt)
         return result.scalars().one()
+
+    async def edit(self, data: BaseModel, **filter_by):
+        query = select(self.model).filter_by(**filter_by)
+
+        result = await self.session.execute(query)
+        items = result.scalars().all()
+
+        if len(items) == 0:
+            raise HTTPException(status_code=404, detail="Объект не найден")
+        elif len(items) > 1:
+            raise HTTPException(status_code=400, detail="Найдено несколько объектов")
+
+        edit_stmt = update(self.model).filter_by(**filter_by).values(**data.model_dump())
+        await self.session.execute(edit_stmt)
+
+    async def delete(self, **filter_by):
+        query = select(self.model).filter_by(**filter_by)
+
+        result = await self.session.execute(query)
+        items = result.scalars().all()
+
+        if len(items) == 0:
+            raise HTTPException(status_code=404, detail="Объект не найден")
+        elif len(items) > 1:
+            raise HTTPException(status_code=400, detail="Найдено несколько объектов")
+
+        delete_stmt = delete(self.model).filter_by(**filter_by)
+        await self.session.execute(delete_stmt)

@@ -53,22 +53,20 @@ async def create_hotel(hotel_data: Hotel = Body(openapi_examples={
 
 @router.put("/{hotel_id}",
          summary="Обновить информацию об отеле полностью")
-def put_hotel(hotel_id: int, hotel_data: Hotel = Body(openapi_examples={
+async def put_hotel(hotel_id: int, hotel_data: Hotel = Body(openapi_examples={
     "1": { "summary": "Сочи", "value": {
         "title": "Сочи 5 звезд отель у моря",
-        "name": "sochi_u_morya"
+        "location": "sochi_u_morya"
     }},
     "2": { "summary": "Дубай", "value": {
         "title": "Дубай 5 звезд отель",
-        "name": "dubai"
+        "location": "dubai"
     }},
 })):
-    global hotels
-    for hotel in hotels:
-        if hotel["id"] == hotel_id:
-            hotel["title"] = hotel_data.title
-            hotel["name"] = hotel_data.name
-            break
+    async with async_session_maker() as session:
+        await HotelsRepository(session).edit(hotel_data, id=hotel_id)
+        await session.commit()
+
     return {"status": "OK"}
 
 
@@ -91,7 +89,9 @@ def patch_hotel(
 
 @router.delete("/{hotel_id}",
             summary="Удалить отель")
-def delete_notel(hotel_id: int):
-    global hotels
-    hotels = [hotel for hotel in hotels if hotel["id"] != hotel_id]
+async def delete_notel(hotel_id: int):
+    async with async_session_maker() as session:
+        await HotelsRepository(session).delete(id=hotel_id)
+        await session.commit()
+
     return {"status": "OK"}
