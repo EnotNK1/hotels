@@ -25,7 +25,7 @@ class BaseRepository:
         result = await self.session.execute(data_stmt)
         return result.scalars().one()
 
-    async def edit(self, data: BaseModel, **filter_by):
+    async def edit(self, data: BaseModel, exclude_unset: bool = False, **filter_by):
         query = select(self.model).filter_by(**filter_by)
 
         result = await self.session.execute(query)
@@ -36,7 +36,11 @@ class BaseRepository:
         elif len(items) > 1:
             raise HTTPException(status_code=400, detail="Найдено несколько объектов")
 
-        edit_stmt = update(self.model).filter_by(**filter_by).values(**data.model_dump())
+        edit_stmt = (
+            update(self.model)
+            .filter_by(**filter_by)
+            .values(**data.model_dump(exclude_unset=exclude_unset))
+        )
         await self.session.execute(edit_stmt)
 
     async def delete(self, **filter_by):
