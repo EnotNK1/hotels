@@ -1,8 +1,12 @@
 from pydantic import BaseModel
 
-class Hotel(BaseModel):
+class HotelAdd(BaseModel):
     title: str
     location: str
+
+class Hotel(HotelAdd):
+    id: int
+
 
 class HotelPATCH(BaseModel):
     title: str | None = None
