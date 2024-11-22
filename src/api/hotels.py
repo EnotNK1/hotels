@@ -25,6 +25,14 @@ async def get_hotels(
             offset=per_page * (pagination.page - 1)
         )
 
+@router.get("/{hotel_id}",
+            summary="Получить отель по id")
+async def get_hotel_by_id(hotel_id: int):
+    async with async_session_maker() as session:
+        hotel = await HotelsRepository(session).get_one_or_none(id=hotel_id)
+
+    return hotel
+
 
 
 @router.post("",
