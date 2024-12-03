@@ -1,5 +1,12 @@
 from pydantic import BaseModel
 
+class RoomAddRequest(BaseModel):
+    title: str
+    description: str | None
+    price: int
+    quantity: int
+
+
 class RoomAdd(BaseModel):
     hotel_id: int
     title: str
