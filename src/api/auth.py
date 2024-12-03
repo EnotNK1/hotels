@@ -20,6 +20,7 @@ async def register_user(
 
     return {"status": "OK"}
 
+
 @router.post("/login")
 async def login_user(
         data: UserRequestAdd,
@@ -44,4 +45,9 @@ async def get_me(
         user = await UsersRepository(session).get_one_or_none(id=user_id)
         return user
 
+
+@router.post("/logout")
+async def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"status": "OK"}
 
