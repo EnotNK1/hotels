@@ -15,7 +15,7 @@ async def get_rooms(
     async with async_session_maker() as session:
         return await RoomsRepository(session).get_filtred(hotel_id=hotel_id)
 
-@router.get("/{hotel_id}/rooms/{room_id}}",
+@router.get("/{hotel_id}/rooms/{room_id}",
             summary="Получить комнату по id")
 async def get_room_by_id(room_id: int):
     async with async_session_maker() as session:
