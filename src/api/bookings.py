@@ -6,7 +6,7 @@ from src.api.dependencies import UserIdDep, DBDep
 
 router = APIRouter(prefix="/bookings", tags=["Бронирования"])
 
-@router.post("")
+@router.post("", summary="Создать бронирование")
 async def create_booking(
         db: DBDep,
         user_id: UserIdDep,
