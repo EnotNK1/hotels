@@ -5,6 +5,7 @@ class RoomAddRequest(BaseModel):
     description: str | None
     price: int
     quantity: int
+    facilities_ids: list[int] | None
 
 
 class RoomAdd(BaseModel):
