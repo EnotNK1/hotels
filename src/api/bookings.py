@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from sqlalchemy.testing.config import db_url
+from fastapi_cache.decorator import cache
 
 from src.schemas.bookings import BookingAddRequest, BookingAdd
 from src.api.dependencies import UserIdDep, DBDep
@@ -22,6 +23,7 @@ async def create_booking(
 @router.get("",
          summary="Получить список всех бронирований",
          description="")
+@cache(expire=10)
 async def get_bookings(
         db: DBDep
 ):
@@ -30,6 +32,7 @@ async def get_bookings(
 @router.get("/me",
          summary="Получить список моих бронирований",
          description="")
+@cache(expire=10)
 async def get_my_bookings(
         db: DBDep,
         user_id: UserIdDep
