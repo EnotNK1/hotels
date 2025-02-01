@@ -13,9 +13,9 @@ from pathlib import Path
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 
-from src.init import redis_manager
-
 sys.path.append(str(Path(__file__).parent.parent))
+
+from src.init import redis_manager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
