@@ -6,6 +6,7 @@ from src.repositories.mappers.mappers import UserDataMapper
 from src.schemas.users import UserWithHashedPassword
 from src.repositories.base import BaseRepository
 
+
 class UsersRepository(BaseRepository):
     model = UsersOrm
     mapper = UserDataMapper

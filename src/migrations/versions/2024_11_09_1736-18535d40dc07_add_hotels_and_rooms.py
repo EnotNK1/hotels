@@ -1,7 +1,7 @@
 """add hotels and rooms
 
 Revision ID: 18535d40dc07
-Revises: 
+Revises:
 Create Date: 2024-11-09 17:36:10.257475
 
 """

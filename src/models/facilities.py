@@ -7,6 +7,7 @@ from src.database import Base
 if typing.TYPE_CHECKING:
     from src.models import RoomsOrm
 
+
 class FacilitiesOrm(Base):
     __tablename__ = "facilities"
 
@@ -14,8 +15,7 @@ class FacilitiesOrm(Base):
     title: Mapped[str] = mapped_column(String(100))
 
     rooms: Mapped[list["RoomsOrm"]] = relationship(
-        back_populates="facilities",
-        secondary="rooms_facilities"
+        back_populates="facilities", secondary="rooms_facilities"
     )
 
 

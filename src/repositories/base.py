@@ -13,18 +13,15 @@ class BaseRepository:
         self.session = session
 
     async def get_filtred(self, *filter, **filtred_by):
-        query = (
-            select(self.model)
-            .filter(*filter)
-            .filter_by(**filtred_by)
-        )
+        query = select(self.model).filter(*filter).filter_by(**filtred_by)
         result = await self.session.execute(query)
 
-        return [self.mapper.map_to_domain_entity(model) for model in result.scalars().all()]
+        return [
+            self.mapper.map_to_domain_entity(model) for model in result.scalars().all()
+        ]
 
     async def get_all(self, *args, **kwargs):
         return await self.get_filtred()
-
 
     async def get_one_or_none(self, **filter_by):
         query = select(self.model).filter_by(**filter_by)
@@ -34,7 +31,6 @@ class BaseRepository:
         if model is None:
             return None
         return self.mapper.map_to_domain_entity(model)
-
 
     async def add(self, data: BaseModel):
         data_stmt = insert(self.model).values(**data.model_dump()).returning(self.model)

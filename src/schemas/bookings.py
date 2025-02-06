@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import date
 
+
 class BookingAddRequest(BaseModel):
     room_id: int
     date_from: date
@@ -17,4 +18,3 @@ class BookingAdd(BaseModel):
 
 class Booking(BookingAdd):
     id: int
-
