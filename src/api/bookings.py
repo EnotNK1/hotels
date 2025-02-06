@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy.testing.config import db_url
 from fastapi_cache.decorator import cache
 
 from src.schemas.bookings import BookingAddRequest, BookingAdd
