@@ -36,6 +36,14 @@ class HotelNotFoundHTTPException(MyAppException):
     detail = "Отель не найден"
 
 
+class HotelNotFoundException(MyAppException):
+    detail = "Отель не найден"
+
+
 class RoomNotFoundHTTPException(MyAppException):
     status_code = 404
+    detail = "Номер не найден"
+
+
+class RoomNotFoundException(MyAppException):
     detail = "Номер не найден"
