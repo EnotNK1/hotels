@@ -3,6 +3,7 @@ from sqlalchemy.exc import NoResultFound, IntegrityError
 from pydantic import BaseModel
 from asyncpg.exceptions import UniqueViolationError
 from fastapi import HTTPException
+import logging
 
 from src.exceptions import ObjectNotFoundException, ObjectAlreadyExistsException
 from src.repositories.mappers.base import DataMapper
@@ -51,9 +52,15 @@ class BaseRepository:
             model = result.scalars().one()
             return self.mapper.map_to_domain_entity(model)
         except IntegrityError as ex:
+            logging.exception(
+                f"Не удалось добавить данные в БД, входные данные={data}"
+            )
             if isinstance(ex.orig.__cause__, UniqueViolationError):
                 raise ObjectAlreadyExistsException from ex
             else:
+                logging.exception(
+                    f"Незнакомая ошибка: не удалось добавить данные в БД, входные данные={data}"
+                )
                 raise ex
 
     async def add_bulk(self, data: list[BaseModel]):
