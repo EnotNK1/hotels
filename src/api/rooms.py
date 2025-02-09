@@ -25,7 +25,7 @@ async def get_rooms(
 @cache(expire=10)
 async def get_room_by_id(db: DBDep, hotel_id: int, room_id: int):
     try:
-        return await db.rooms.get_one_or_none_with_rels(id=room_id, hotel_id=hotel_id)
+        return await RoomService(db).get_room(room_id, hotel_id=hotel_id)
     except RoomNotFoundException:
         raise RoomNotFoundHTTPException
 
