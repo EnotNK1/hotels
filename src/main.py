@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import logging
 import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent))
 from contextlib import asynccontextmanager
 from fastapi.openapi.docs import get_swagger_ui_html
 import uvicorn
@@ -15,7 +16,6 @@ from src.api.images import router as router_images
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 
-sys.path.append(str(Path(__file__).parent.parent))
 
 logging.basicConfig(level=logging.INFO)
 
